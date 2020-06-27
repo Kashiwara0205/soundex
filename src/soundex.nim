@@ -30,6 +30,7 @@ type
     codeValueObj*: SoundexCode
 
 proc validateInput(input: string): void = 
+  # if input doesn't have alpha, then raise newExecption
   echo "validate"
 
 proc newSoundexInput(input: string): SoundexInput = 
@@ -37,7 +38,8 @@ proc newSoundexInput(input: string): SoundexInput =
   result = SoundexInput(input: input)
 
 proc validateCode(code: string): void = 
-  echo "validate"
+  # if code is not 4 size, then raise newExecption
+  if not code.len == 4: raise newException(ValueError, "Code length is not 4")
 
 proc newSoundexCode(code: string): SoundexCode =
   validateCode(code)
@@ -62,8 +64,7 @@ proc calcSoundexCode(input :string): string =
                         .filter(f => not DELETED_SOUNDEX_CODE.contains(f))                         # delete soundex code
                         .map(m => SOUNDEX_CODE_HISTORY[m])                                         # convert string to integer by history
                         .foldl(if a.len > 0 and a[high(a)] == b: fmt"{a}" else: fmt"{a}{b}", "")   # Removal of consecutive numbers
-        
-  echo soundex_number
+
   # get three number
   let three_sooundex_number = 
     if soundex_number.len >= SOUNDEX_NUMBER_SIZE:
