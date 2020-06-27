@@ -1,4 +1,6 @@
 # soundex
+[![Build Status](https://travis-ci.org/Kashiwara0205/soundex.svg?branch=master)](https://travis-ci.org/Kashiwara0205/soundex)
+
 soundex algorithm nim library
 
 ## Usage
