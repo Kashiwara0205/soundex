@@ -31,7 +31,7 @@ type
 
 proc validateInput(input: string): void = 
   # if input doesn't have alpha, then raise newExecption
-  echo "validate"
+  if not input.any(x => isAlphaAscii(x)): raise newException(ValueError, "The alphabet is not contain")
 
 proc newSoundexInput(input: string): SoundexInput = 
   validateInput(input)

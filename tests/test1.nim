@@ -39,3 +39,13 @@ test "should return code":
 
   sdx = soundex.newSoundex("Joh12n")
   check "J500" == sdx.getCode
+
+test "should valid illegal input":
+  expect(ValueError):
+    discard soundex.newSoundex("1")
+    
+  expect(ValueError):
+    discard soundex.newSoundex("1234")
+
+  expect(ValueError):
+    discard soundex.newSoundex("####")
