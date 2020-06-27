@@ -1,7 +1,84 @@
-# This is just an example to get you started. A typical library package
-# exports the main API in this file. Note that you cannot rename this file
-# but you can remove it if you wish.
+import 
+  strutils,
+  sequtils, 
+  sugar,
+  tables,
+  strformat
 
-proc add*(x, y: int): int =
-  ## Adds two files together.
-  return x + y
+const DELETED_SOUNDEX_CODE = ['A', 'E', 'H', 'I', 'O', 'U', 'W', 'Y']
+
+let SOUNDEX_CODE_HISTORY = {
+  'B': '1', 'F': '1', 'P': '1', 'V': '1',
+  'C': '2', 'G': '2', 'J': '2', 'K': '2', 'Q': '2', 'S': '2', 'X': '2',  'Z': '2',
+  'D': '3', 'T': '3',
+  'L': '4',
+  'M': '5', 'N': '5',
+  'R': '6'
+}.newTable
+
+const SOUNDEX_NUMBER_SIZE = 3
+
+type
+  SoundexInput = object
+    input*: string
+
+  SoundexCode = object
+    code*: string
+
+  Soundex = object
+    inputValueObj*: SoundexInput
+    codeValueObj*: SoundexCode
+
+proc validateInput(input: string): void = 
+  echo "validate"
+
+proc newSoundexInput(input: string): SoundexInput = 
+  validateInput(input)
+  result = SoundexInput(input: input)
+
+proc validateCode(code: string): void = 
+  echo "validate"
+
+proc newSoundexCode(code: string): SoundexCode =
+  validateCode(code)
+  result = SoundexCode(code: code)
+
+proc fillZero(soundex_number: string): string = 
+  var filled_soundex_number = soundex_number
+  var i = filled_soundex_number.len
+
+  while i < SOUNDEX_NUMBER_SIZE:
+    filled_soundex_number.add('0')
+    inc(i)
+
+  result = filled_soundex_number
+
+proc calcSoundexCode(input :string): string =
+  let upper_input = toUpperAscii(input)
+
+  let soundex_head = upper_input[0]
+  let soundex_number = upper_input[1..high(input)]
+                               .filter(f => not DELETED_SOUNDEX_CODE.contains(f))                         # delete soundex code
+                               .map(m => SOUNDEX_CODE_HISTORY[m])                                         # convert string to integer by history
+                               .foldl(if a.len > 0 and a[high(a)] == b: fmt"{a}" else: fmt"{a}{b}", "")   # Removal of consecutive numbers
+                               
+  # get three number
+  let three_sooundex_number = 
+    if soundex_number.len >= SOUNDEX_NUMBER_SIZE:
+      soundex_number[0..SOUNDEX_NUMBER_SIZE - 1]
+    else:
+      fillZero(soundex_number)
+
+  # merge soundex_head and three_sooundex_number
+  let code = fmt"{soundex_head}{three_sooundex_number}"
+  result = code
+
+proc newSoundex*(input: string): Soundex =
+  result = Soundex(inputValueObj: newSoundexInput(input), 
+                   codeValueObj: newSoundexCode(calcSoundexCode(input)))
+
+proc getCode*(soundex :Soundex): string =
+  result = soundex.codeValueObj.code
+
+proc getInput*(soundex :Soundex): string = 
+  result = soundex.inputValueObj.input

@@ -6,7 +6,24 @@
 # To run these tests, simply execute `nimble test`.
 
 import unittest
-
 import soundex
-test "can add":
-  check add(5, 5) == 10
+
+test "should return input content":
+  var sdx = soundex.newSoundex("xxxxx")
+  check "xxxxx" == sdx.getInput
+
+  sdx = soundex.newSoundex("Rupert")
+  check "Rupert" == sdx.getInput
+
+  sdx = soundex.newSoundex("Robert")
+  check "Robert" == sdx.getInput
+
+test "should return code":
+  var sdx = soundex.newSoundex("xxxxx")
+  check "X200" == sdx.getCode
+
+  sdx = soundex.newSoundex("Rupert")
+  check "R163" == sdx.getCode
+
+  sdx = soundex.newSoundex("Robert")
+  check "R163" == sdx.getCode
