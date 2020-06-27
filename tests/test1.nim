@@ -18,6 +18,12 @@ test "should return input content":
   sdx = soundex.newSoundex("Robert")
   check "Robert" == sdx.getInput
 
+  sdx = soundex.newSoundex("1John")
+  check "1John" == sdx.getInput
+
+  sdx = soundex.newSoundex("Joh12n")
+  check "Joh12n" == sdx.getInput
+
 test "should return code":
   var sdx = soundex.newSoundex("xxxxx")
   check "X200" == sdx.getCode
@@ -27,3 +33,9 @@ test "should return code":
 
   sdx = soundex.newSoundex("Robert")
   check "R163" == sdx.getCode
+
+  sdx = soundex.newSoundex("1John")
+  check "J500" == sdx.getCode
+
+  sdx = soundex.newSoundex("Joh12n")
+  check "J500" == sdx.getCode

@@ -55,13 +55,15 @@ proc fillZero(soundex_number: string): string =
 
 proc calcSoundexCode(input :string): string =
   let upper_input = toUpperAscii(input)
+                      .filter(f => isAlphaAscii(f)) # filter only alph
 
   let soundex_head = upper_input[0]
-  let soundex_number = upper_input[1..high(input)]
-                               .filter(f => not DELETED_SOUNDEX_CODE.contains(f))                         # delete soundex code
-                               .map(m => SOUNDEX_CODE_HISTORY[m])                                         # convert string to integer by history
-                               .foldl(if a.len > 0 and a[high(a)] == b: fmt"{a}" else: fmt"{a}{b}", "")   # Removal of consecutive numbers
-                               
+  let soundex_number = upper_input[1..high(upper_input)]
+                        .filter(f => not DELETED_SOUNDEX_CODE.contains(f))                         # delete soundex code
+                        .map(m => SOUNDEX_CODE_HISTORY[m])                                         # convert string to integer by history
+                        .foldl(if a.len > 0 and a[high(a)] == b: fmt"{a}" else: fmt"{a}{b}", "")   # Removal of consecutive numbers
+        
+  echo soundex_number
   # get three number
   let three_sooundex_number = 
     if soundex_number.len >= SOUNDEX_NUMBER_SIZE:
